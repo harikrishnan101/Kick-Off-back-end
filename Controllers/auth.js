@@ -8,8 +8,7 @@ var jwt = require('jsonwebtoken');
 const saltRounds=process.env.saltRounds
 
 const signUp=(req,res)=>{
-    
-
+  
    try {
      bcrypt.genSalt(saltRounds, (err, salt) => {
          bcrypt.hash(req.body.password, salt, (err, hash) => {
@@ -41,8 +40,10 @@ try {
         expiresIn: '2d'
        
     })
+    user.password = undefined;
+user.ConfirmPassword = undefined;
     // console.log(token);
-      res.status(200).json({ login: true, token:token});
+      res.status(200).json({ login: true, token:token,user:user});
     } else {
       res.status(403).json({ login: false, message: 'Invalid credentials' });
     }
