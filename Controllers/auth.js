@@ -12,6 +12,7 @@ const signUp=(req,res)=>{
    try {
      bcrypt.genSalt(saltRounds, (err, salt) => {
          bcrypt.hash(req.body.password, salt, (err, hash) => {
+          console.log(hash,"hash");
              
              USER({firstname:req.body.firstname.trim(),lastname:req.body.lastname.trim(),email:req.body.email.trim(),password:hash.trim(),ConfirmPassword:hash.trim()}).save().then((response)=>{
                 res.status(200).json({signUp:true });
@@ -34,9 +35,8 @@ try {
   
   if(user){
    bcrypt.compare(req.body.password, user.password, function(err,resp) {
-    console.log(resp,"success");
     if(resp){
-      const token = jwt.sign({ userId: user._id,email:user.email,firstname:user.firstname,lastname:user.lastname,role:1},process.env.JWT_KEY, {
+      const token = jwt.sign({ userId:user._id,email:user.email,firstname:user.firstname,lastname:user.lastname,role:user.role},process.env.JWT_KEY, {
         expiresIn: '2d'
        
     })

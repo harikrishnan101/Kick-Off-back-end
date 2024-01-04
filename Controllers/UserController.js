@@ -1,6 +1,7 @@
 
 const COURT=require('../Models/CourtSchema')
 const multer = require('multer');
+const { response } = require('../app');
 const RegisterNewCourt = (req, res) => {
 
     
@@ -35,4 +36,22 @@ const RegisterNewCourt = (req, res) => {
             })
     })
 }
-module.exports={RegisterNewCourt}
+
+const getMyCourtData=(req,res)=>{
+    console.log(req.userId);
+COURT.find({userId:req.userId}).then((response)=>{
+    
+    console.log(response,"ffffffffffffffffff");
+    res.status(200).json({data:response})
+})
+
+}
+
+const getSingleCourtData=(req,res)=>{
+    COURT.findOne({_id:req.query.courtId}).then((response)=>{
+    
+        // console.log(response,"ffffffffffffffffff");
+        res.status(200).json({data:response})
+    })
+}
+module.exports={RegisterNewCourt,getMyCourtData,getSingleCourtData} 
