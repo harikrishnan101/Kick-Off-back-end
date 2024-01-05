@@ -1,5 +1,5 @@
 var express = require('express');
-const { RegisterNewCourt,getMyCourtData, getSingleCourtData } = require('../Controllers/UserController');
+const { RegisterNewCourt,getMyCourtData,addCourtTiming, getSingleCourtData,getLatestUpdateDate} = require('../Controllers/UserController');
 const { userAuth } = require('../Middlwware/userAuth');
 
 var router = express.Router();
@@ -8,4 +8,6 @@ var router = express.Router();
 router.post('/CourtRegister',userAuth,RegisterNewCourt)
 router.get('/getMyCourtData',userAuth,getMyCourtData)
 router.get('/getSingleCourtData',userAuth,getSingleCourtData)
+router.post('/addCourtTiming',userAuth,addCourtTiming)
+router.get('/getLatestUpdateDate',userAuth,getLatestUpdateDate)
 module.exports = router;

@@ -12,7 +12,7 @@ const signUp=(req,res)=>{
    try {
      bcrypt.genSalt(saltRounds, (err, salt) => {
          bcrypt.hash(req.body.password, salt, (err, hash) => {
-          console.log(hash,"hash");
+          
              
              USER({firstname:req.body.firstname.trim(),lastname:req.body.lastname.trim(),email:req.body.email.trim(),password:hash.trim(),ConfirmPassword:hash.trim()}).save().then((response)=>{
                 res.status(200).json({signUp:true });
@@ -31,7 +31,7 @@ const signUp=(req,res)=>{
 const login= async (req,res)=>{
 try {
   const user= await USER.findOne({email:req.body.email})
-  // console.log(user,"user");
+  
   
   if(user){
    bcrypt.compare(req.body.password, user.password, function(err,resp) {
@@ -42,7 +42,7 @@ try {
     })
     user.password = undefined;
 user.ConfirmPassword = undefined;
-    // console.log(token);
+   
       res.status(200).json({ login: true, token:token,user:user});
     } else {
       res.status(403).json({ login: false, message: 'Invalid credentials' });

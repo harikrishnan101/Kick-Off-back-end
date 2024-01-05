@@ -5,7 +5,7 @@ const userAuth = (req, res, next) => {
   try {
     const token = req.headers['authorization'].split(' ');
     jwt.verify(token[1], process.env.JWT_KEY, (err, decodedToken) => {
-        // console.log(decodedToken,"decodedToken");
+       
       if (err || !decodedToken || !decodedToken.userId) {
         res.status(401).json({ message: "Unauthorized request" });
       } else {
