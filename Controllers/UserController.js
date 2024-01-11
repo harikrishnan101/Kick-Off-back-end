@@ -1,11 +1,13 @@
 
-const COURT=require('../Models/CourtSchema')
+const COURT = require('../Models/CourtSchema')
 const multer = require('multer');
-const { response } = require('../app');
+const mongoose = require('mongoose')
+// const { response } = require('../app');
 const courtSchedules = require('../Models/courtTimingSchema');
+const ObjectId = require('mongoose').Types.ObjectId
 const RegisterNewCourt = (req, res) => {
 
-    
+
     try {
         const fileStorage = multer.diskStorage({
             destination: (req, file, cb) => {
@@ -15,12 +17,12 @@ const RegisterNewCourt = (req, res) => {
                 cb(null, Date.now() + "-" + file.originalname);
             }
         });
-    
+
         const upload = multer({ storage: fileStorage }).single("image");
-    
+
         upload(req, res, (err) => {
-    
-           
+
+
             COURT({
                 name: req.query.name,
                 location: req.query.location,
@@ -29,43 +31,43 @@ const RegisterNewCourt = (req, res) => {
                 image: req?.file?.filename || 'defaultimage.jpg'
             }).save()
                 .then(response => {
-                    
+
                     res.status(200).json({ message: "court registration successfull" })
                 })
                 .catch(res => {
-                    
+
                     res.status(403).json({ message: "court registration failed" })
                 })
         })
     } catch (error) {
-        
+
     }
 }
 
-const getMyCourtData=(req,res)=>{
-    
-try {
-    COURT.find({userId:req.userId}).then((response)=>{
-        
-       
-        res.status(200).json({data:response})
-    })
-} catch (error) {
-    
-}
+const getMyCourtData = (req, res) => {
+
+    try {
+        COURT.find({ userId: req.userId }).then((response) => {
+
+
+            res.status(200).json({ data: response })
+        })
+    } catch (error) {
+
+    }
 
 }
 
-const getSingleCourtData=(req,res)=>{
-   try {
-     COURT.findOne({_id:req.query.courtId}).then((response)=>{
-     
-         
-         res.status(200).json({data:response})
-     })
-   } catch (error) {
-    
-   }
+const getSingleCourtData = (req, res) => {
+    try {
+        COURT.findOne({ _id: req.query.courtId }).then((response) => {
+
+
+            res.status(200).json({ data: response })
+        })
+    } catch (error) {
+
+    }
 }
 const addCourtTiming = (req, res) => {
     try {
@@ -95,6 +97,7 @@ const addCourtTiming = (req, res) => {
 
         courtSchedules.insertMany(timingObjectArray)
             .then((resp) => {
+                
                 res.status(200).json({ message: "Schedule added successfully" });
             })
     } catch (error) {
@@ -107,7 +110,7 @@ const getLatestUpdateDate = (req, res) => {
     try {
         courtSchedules.find({ courtId: req?.query?.courtId }).sort({ date: 1 }).limit(1).select('date').then((resp) => {
 
-          
+
             let latestDate = new Date(resp[0]?.date)
             res.status(200).json({ minDate: latestDate })
         })
@@ -115,4 +118,59 @@ const getLatestUpdateDate = (req, res) => {
         res.status(500).json(error)
     }
 }
-module.exports={RegisterNewCourt,getMyCourtData,getSingleCourtData,addCourtTiming,getLatestUpdateDate} 
+const getAllCourtData = (req, res) => {
+    COURT.find().then((resp) => {
+        res.status(200).json({ court: resp })
+    })
+        .catch((err) => {
+            res.status(400).json({ message: "something wrong" })
+        })
+}
+
+
+const getslotData = (req, res) => {
+    try {
+       
+    //    console.log(new Date(req.query.date.split("T")[0]));
+        courtSchedules.aggregate([
+            {
+                $match: {
+                    courtId: new ObjectId(req.query.courtId),
+                  date:new Date(req.query.date.split("T")[0]), 
+                  "slot.id":{$gt:parseInt(req.query.currentHour)}
+                }
+            },
+            {
+                $lookup: {
+                    from: "courts",
+                    localField: 'courtId',
+                    foreignField: '_id',
+                    as: "courts"
+                }
+            },
+            {
+                $project: {
+                    _id:1,
+                    date:1,
+                    slot:1,
+                    cost:1,
+                    bookedBY:1,
+                    courts:{$arrayElemAt:['$courts',0]}
+                }
+            }
+        
+        ])
+        .then((resp)=>{
+            console.log(resp,"resp");
+            res.status(200).json(resp)
+        })
+    .catch(err => {
+       
+    })
+        } catch (error) {
+
+}
+
+    }
+
+module.exports = { RegisterNewCourt, getMyCourtData, getSingleCourtData, addCourtTiming, getLatestUpdateDate, getslotData, getAllCourtData } 

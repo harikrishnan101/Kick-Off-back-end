@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const court = require('../Models/CourtSchema');
 
-const userAuth = (req, res, next) => {
+const VendorAuth = (req, res, next) => {
   try {
     const token = req.headers['authorization'].split(' ');
     jwt.verify(token[1], process.env.JWT_KEY, (err, decodedToken) => {
@@ -23,4 +23,4 @@ const userAuth = (req, res, next) => {
 };
 
 
-module.exports = {userAuth};
+module.exports = {VendorAuth};
