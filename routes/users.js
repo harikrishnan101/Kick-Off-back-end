@@ -1,20 +1,21 @@
 var express = require('express');
-const { RegisterNewCourt,getMyCourtData,addCourtTiming, getSingleCourtData,getLatestUpdateDate,getAllCourtData,getslotData} = require('../Controllers/UserController');
-const { VendorAuth } = require('../Middlwware/Vendor');
+const { RegisterNewCourt,getMyCourtData,addCourtTiming, getSingleCourtData,getLatestUpdateDate,getAllCourtData,getslotData, getMyBookings} = require('../Controllers/UserController');
+
 const { paymentsuccess , payments} = require('../Controllers/payment');
+const { AdminAuth } = require('../Middlwware/adminAuth');
 
 
 var router = express.Router();
 
 /* GET users listing. */
-router.post('/CourtRegister',VendorAuth,RegisterNewCourt)
-router.get('/getMyCourtData',VendorAuth,getMyCourtData)
-router.get('/getSingleCourtData',VendorAuth,getSingleCourtData)
-router.post('/addCourtTiming',VendorAuth,addCourtTiming)
-router.get('/getLatestUpdateDate',VendorAuth,getLatestUpdateDate)
-router.get('/getAllCourtData',VendorAuth,getAllCourtData)
-router.get('/getslotData',VendorAuth,getslotData)
-
+router.post('/CourtRegister',AdminAuth,RegisterNewCourt)
+router.get('/getMyCourtData',AdminAuth,getMyCourtData)
+router.get('/getSingleCourtData',AdminAuth,getSingleCourtData)
+router.post('/addCourtTiming',AdminAuth,addCourtTiming)
+router.get('/getLatestUpdateDate',AdminAuth,getLatestUpdateDate)
+router.get('/getAllCourtData',AdminAuth,getAllCourtData)
+router.get('/getslotData',AdminAuth,getslotData)
 router.post('/payments',payments)
-router.post('/paymentsuccess',VendorAuth,paymentsuccess)
+router.post('/paymentsuccess',AdminAuth,paymentsuccess)
+router.get('/getMyBookings',AdminAuth,getMyBookings)
 module.exports = router;

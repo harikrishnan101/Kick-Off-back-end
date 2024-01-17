@@ -13,12 +13,7 @@ const courtSchema = mongoose.Schema({
 
 
     },
-    cost: {
-        type: String,
-        required: true
-        
-
-    },
+    
     image:{
     type:String
 
