@@ -9,7 +9,7 @@ const UserAuth = (req, res, next) => {
         res.status(401).json({ message: "Unauthorized request" });
       } else {
         req.userId = decodedToken.userId;
-        // Assuming user role is 1 (modify this based on your role setup)
+        
         if (decodedToken.role === 1) {
           next();
         } else {

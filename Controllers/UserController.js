@@ -4,6 +4,7 @@ const multer = require('multer');
 const mongoose = require('mongoose')
 // const { response } = require('../app');
 const courtSchedules = require('../Models/courtTimingSchema');
+const { response } = require('../app');
 const ObjectId = require('mongoose').Types.ObjectId
 const RegisterNewCourt = (req, res) => {
 
@@ -176,6 +177,11 @@ const getslotData = (req, res) => {
                     bookedBY: 1,
                     courts: { $arrayElemAt: ['$courts', 0] }
                 }
+            },
+            {
+                $sort:{
+                    date:1
+                }
             }
 
         ])
@@ -242,4 +248,26 @@ const getMyBookings = (req, res) => {
 
     }
 }
-module.exports = { RegisterNewCourt, getMyCourtData, getSingleCourtData, addCourtTiming, getLatestUpdateDate, getslotData, getAllCourtData, getMyBookings } 
+const getCourtTimeData=(req,res)=>{
+    courtSchedules.aggregate([
+        {$match:{
+            courtId:new ObjectId(req.query.courtId),
+            date:{$gt:new Date()}
+        }
+
+        },
+        {$group:{_id:"$date",slotsData:{$push:{slot:"$slot",cost:'$cost',_id:"$_id",courtId:"$courtId"}}}
+
+        },
+        {
+            $sort:{
+                _id:1
+            }
+        }
+    ]).then((response)=>{
+        res.json(response)
+        console.log(response,"ffffffffffffffffffffffffffffff");
+    })
+}
+
+module.exports = { RegisterNewCourt, getMyCourtData, getSingleCourtData, addCourtTiming, getLatestUpdateDate, getslotData, getAllCourtData, getMyBookings,getCourtTimeData } 

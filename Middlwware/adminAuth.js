@@ -10,7 +10,7 @@ const AdminAuth = (req, res, next) => {
         res.status(401).json({ message: "Unauthorized request" });
       } else {
         req.userId = decodedToken.userId;
-        if (decodedToken.role === 2 || decodedToken.role === 3) {
+        if (decodedToken.role === 2) {
           next();
         } else {
           res.status(401).json({ message: "Unauthorized request" });
