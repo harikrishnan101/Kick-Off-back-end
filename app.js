@@ -9,7 +9,7 @@ const connectDB=require('./config/dbconfig')
 var jwt = require('jsonwebtoken');
 
 var authRouter = require('./routes/authRouter');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/admin');
  var adminRouter = require('./routes/admin');
 
  require('dotenv').config()

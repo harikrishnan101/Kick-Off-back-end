@@ -1,25 +1,20 @@
 const jwt = require('jsonwebtoken');
 const court = require('../Models/CourtSchema');
 
-const UserAuth = (req, res, next) => {
+const userAuth = (req, res, next) => {
   try {
-    const token = req.headers['authorization'].split(' ');
-    jwt.verify(token[1], process.env.JWT_KEY, (err, decodedToken) => {
-      if (err || !decodedToken || !decodedToken.userId) {
-        res.status(401).json({ message: "Unauthorized request" });
-      } else {
-        req.userId = decodedToken.userId;
-        
-        if (decodedToken.role === 1) {
-          next();
-        } else {
-          res.status(401).json({ message: "Unauthorized request" });
-        }
-      }
-    });
+      const token = req.headers['authorization'].split(' ');
+      jwt.verify(token[1], process.env.TOKENPASS, (err, data) => {
+          if (data) {
+              req.userId = data?.userData._id;
+              next();
+          } else {
+              res.status(401).json({ auth : false});
+          }
+      })
   } catch (error) {
-    res.status(403).json({ message: "Something went wrong" });
-  } 
-};
+      res.status(500).json({ error: error.message })
+  }
+}
 
-module.exports = { UserAuth };
+module.exports = { userAuth };

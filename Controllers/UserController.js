@@ -151,7 +151,7 @@ const getAllCourtData = (req, res) => {
 const getslotData = (req, res) => {
     try {
 
-        //    console.log(new Date(req.query.date.split("T")[0]));
+        
         courtSchedules.aggregate([
             {
                 $match: {
@@ -186,7 +186,6 @@ const getslotData = (req, res) => {
 
         ])
             .then((resp) => {
-                console.log(resp, "resp");
                 res.status(200).json(resp)
             })
             .catch(err => {
@@ -203,10 +202,10 @@ const getMyBookings = (req, res) => {
         const slotId = currentDate.getHours()
 
         currentDate.setUTCHours(7, 0, 0, 0)
-        // const currentDate2=new Date(stringDate)
+      
         console.log(currentDate, "bbbbbbbbbbbbbbbbbbbbbbbbbb", slotId);
 
-        // console.log(req.userId);
+       
         console.log(currentDate,"currentDate");
         courtSchedules.aggregate([
             {
@@ -266,7 +265,7 @@ const getCourtTimeData=(req,res)=>{
         }
     ]).then((response)=>{
         res.json(response)
-        console.log(response,"ffffffffffffffffffffffffffffff");
+       
     })
 }
 
