@@ -10,18 +10,16 @@ var jwt = require('jsonwebtoken');
 
 var authRouter = require('./routes/authRouter');
 var usersRouter = require('./routes/admin');
- var adminRouter = require('./routes/admin');
+var adminRouter = require('./routes/admin');
 
- require('dotenv').config()
+require('dotenv').config()
 
- var cors = require('cors')
+var cors = require('cors')
 var app = express();
 connectDB()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-require('dotenv').config()
-
 
 const corsOptions ={
   origin:'*', 
@@ -30,16 +28,9 @@ const corsOptions ={
 }
 app.use(cors(corsOptions));
 
-const dotenv=require('dotenv').config();
-if(dotenv.error){
-  throw dotenv.error
-}
-
 app.use(cors({
   origin:['https://kick-off.onrender.com','http://localhost:3000']
 }))
-
-
 
 app.use(logger('dev'));
 app.use(express.json());
