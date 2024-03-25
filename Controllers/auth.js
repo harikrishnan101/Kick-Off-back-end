@@ -7,41 +7,23 @@ var jwt = require('jsonwebtoken');
 
 const saltRounds=process.env.saltRounds
 
-const signUp = async (req, res) => {
+const signUp=(req,res)=>{
+  
   try {
-      // Check if the email already exists in the database
-      const existingUser = await USER.findOne({ email: req.body.email.trim() });
-      if (existingUser) {
-          // If the email is already registered, send an error response
-          return res.status(400).json({ signUp: false, message: 'Email already registered' });
-      }
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+         
+            
+            USER({firstname:req.body.firstname.trim(),lastname:req.body.lastname.trim(),email:req.body.email.trim(),password:hash.trim(),ConfirmPassword:hash.trim()}).save().then((response)=>{
+               res.status(200).json({signUp:true });
+            })
 
-      // If the email is not already registered, proceed with user registration
-      bcrypt.genSalt(saltRounds, (err, salt) => {
-          bcrypt.hash(req.body.password, salt, (err, hash) => {
-              // Create a new user object with hashed password
-              const newUser = new USER({
-                  firstname: req.body.firstname.trim(),
-                  lastname: req.body.lastname.trim(),
-                  email: req.body.email.trim(),
-                  password: hash.trim(),
-                  ConfirmPassword: hash.trim()
-              });
-
-              // Save the new user to the database
-              newUser.save().then((response) => {
-                  res.status(200).json({ signUp: true });
-              }).catch((error) => {
-                  console.error('Error saving user:', error);
-                  res.status(500).json({ signUp: false, message: 'Error saving user' });
-              });
-          });
-      });
+        });
+    });
   } catch (error) {
-      console.error('Error signing up user:', error);
-      res.status(500).json({ signUp: false, message: 'Internal server error' });
-  }
-}
+   res.status(502).json({signUp:false });
+   
+  }}
 
 
 const login = async (req, res) => {
