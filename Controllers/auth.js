@@ -7,38 +7,23 @@ var jwt = require('jsonwebtoken');
 
 const saltRounds=process.env.saltRounds
 
-const signUp = async (req, res) => {
+const signUp=(req,res)=>{
+  
   try {
-    // Check if the email already exists in the database
-    const existingUser = await USER.findOne({ email: req.body.email.trim() });
-    if (existingUser) {
-      // If the email is already registered, send an error response
-      return res.status(400).json({ signUp: false, message: 'Email already registered' });
-    }
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+         
+            
+            USER({firstname:req.body.firstname.trim(),lastname:req.body.lastname.trim(),email:req.body.email.trim(),password:hash.trim(),ConfirmPassword:hash.trim()}).save().then((response)=>{
+               res.status(200).json({signUp:true });
+            })
 
-    // Generate salt asynchronously
-    const salt = await bcrypt.genSalt(saltRounds);
-    // Hash the password asynchronously
-    const hash = await bcrypt.hash(req.body.password, salt);
-
-    // Create a new user object with hashed password
-    const newUser = new USER({
-      firstname: req.body.firstname.trim(),
-      lastname: req.body.lastname.trim(),
-      email: req.body.email.trim(),
-      password: hash.trim(),
-      ConfirmPassword: hash.trim() // Assuming ConfirmPassword should be hashed as well
+        });
     });
-
-    // Save the new user to the database
-    const savedUser = await newUser.save();
-    res.status(200).json({ signUp: true });
   } catch (error) {
-    console.error('Error signing up user:', error);
-    res.status(500).json({ signUp: false, message: 'Internal server error' });
-  }
-}
-
+   res.status(502).json({signUp:false });
+   
+  }}
 
 
 const login = async (req, res) => {
