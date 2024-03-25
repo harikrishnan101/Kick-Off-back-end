@@ -1,14 +1,24 @@
 const mongoose = require('mongoose');
+
 const connectDB = async () => {
     try {
-      const conn = await mongoose.connect(`mongodb+srv://harikrishnan183hari:0qNcWKAGCveVJT82@cluster0.psz4owe.mongodb.net/`);
-      // const conn = await mongoose.connect(`mongodb://localhost:27017/KickOff`);
-      
-      console.log(`Database`);
+        // MongoDB connection string
+        const mongoURI = 'mongodb+srv://ramu:njhghv cbasb6766787y8xm VGFC@cluster0.psz4owe.mongodb.net/';
+
+        // Connect to MongoDB
+        await mongoose.connect(mongoURI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        });
+
+        console.log('MongoDB connected successfully');
     } catch (error) {
-      console.error(error.message);
-      
+        console.error('MongoDB connection error:', error.message);
+        // Terminate the process if unable to connect to the database
+        process.exit(1);
     }
-  }
-  module.exports = connectDB;  
-  
+};
+
+module.exports = connectDB;
