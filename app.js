@@ -30,10 +30,10 @@ const corsOptions ={
 }
 app.use(cors(corsOptions));
 
-// const dotenv=require('dotenv').config();
-// if(dotenv.error){
-//   throw dotenv.error
-// }
+const dotenv=require('dotenv').config();
+if(dotenv.error){
+  throw dotenv.error
+}
 
 app.use(cors({
   origin:['https://kick-off.onrender.com','http://localhost:3000']
