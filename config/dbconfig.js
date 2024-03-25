@@ -1,24 +1,16 @@
-const mongoose = require('mongoose');
 
+
+const mongoose = require('mongoose');
 const connectDB = async () => {
     try {
+      const mongoURI = 'mongodb+srv://harikrishnan183hari:0qNcWKAGCveVJT82@cluster0.psz4owe.mongodb.net/';
       
-        const mongoURI = 'mongodb+srv://harikrishnan183hari:0qNcWKAGCveVJT82@cluster0.psz4owe.mongodb.net/';
-
-        
-        await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false
-        });
-
-        console.log('MongoDB connected successfully');
+      
+      console.log(`connectDatabase`);
     } catch (error) {
-        console.error('MongoDB connection error:', error.message);
-        
-        process.exit(1);
+      console.error(error.message);
+      
     }
-};
+  }
+  module.exports = connectDB;
 
-module.exports = connectDB;
