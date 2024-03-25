@@ -1,10 +1,8 @@
-
-
 const mongoose = require('mongoose');
 const connectDB = async () => {
     try {
-      const mongoURI = 'mongodb+srv://harikrishnan183hari:0qNcWKAGCveVJT82@cluster0.psz4owe.mongodb.net/';
-      
+      const conn = await mongoose.connect(`mongodb+srv://harikrishnan183hari:0qNcWKAGCveVJT82@cluster0.psz4owe.mongodb.net/`);
+      // const conn = await mongoose.connect(`mongodb://localhost:27017/KickOff`);
       
       console.log(`connectDatabase`);
     } catch (error) {
@@ -12,5 +10,5 @@ const connectDB = async () => {
       
     }
   }
-  module.exports = connectDB;
-
+  module.exports = connectDB;  
+  
