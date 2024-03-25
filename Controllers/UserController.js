@@ -203,10 +203,10 @@ const getMyBookings = (req, res) => {
 
         currentDate.setUTCHours(7, 0, 0, 0)
       
-        console.log(currentDate, "bbbbbbbbbbbbbbbbbbbbbbbbbb", slotId);
+        
 
        
-        console.log(currentDate,"currentDate");
+        
         courtSchedules.aggregate([
             {
                 $match: {
@@ -241,7 +241,7 @@ const getMyBookings = (req, res) => {
                 }
             }
         ]).then((resp) => {
-            console.log(resp, "resp");
+            
         })
     } catch (error) {
 
