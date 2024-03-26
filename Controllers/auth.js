@@ -7,23 +7,34 @@ var jwt = require('jsonwebtoken');
 
 const saltRounds=process.env.saltRounds
 
-const signUp=(req,res)=>{
-  
+const signUp = async (req, res) => {
   try {
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
-         
-            
-            USER({firstname:req.body.firstname.trim(),lastname:req.body.lastname.trim(),email:req.body.email.trim(),password:hash.trim(),ConfirmPassword:hash.trim()}).save().then((response)=>{
-               res.status(200).json({signUp:true });
-            })
+    
+    const existingUser = await USER.findOne({ email: req.body.email.trim() });
+    if (existingUser) {
+      return res.status(400).json({ signUp: false, message: 'Email already registered' });
+    }
 
-        });
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    const hash = await bcrypt.hash(req.body.password, salt);
+
+    const newUser = new USER({
+      firstname: req.body.firstname.trim(),
+      lastname: req.body.lastname.trim(),
+      email: req.body.email.trim(),
+      password: hash.trim(),
+      ConfirmPassword: hash.trim() 
     });
+
+
+    const savedUser = await newUser.save();
+    res.status(200).json({ signUp: true });
   } catch (error) {
-   res.status(502).json({signUp:false });
-   
-  }}
+    console.error('Error signing up user:', error);
+    res.status(500).json({ signUp: false, message: 'Internal server error' });
+  }
+}
 
 
 
