@@ -29,9 +29,8 @@ const corsOptions ={
 app.use(cors(corsOptions));
 
 app.use(cors({
-  origin:['https://kick-off.onrender.com','http://localhost:3000'],
-  credentials: true, 
-  optionSuccessStatus: 200
+  origin:['https://kick-off.onrender.com','http://localhost:3000']
+  
 }))
 
 app.use(logger('dev'));
