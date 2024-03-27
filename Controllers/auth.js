@@ -58,8 +58,8 @@ const login = async (req, res) => {
           });
 
          
-          // user.password = undefined;
-          // user.ConfirmPassword = undefined;
+          user.password = undefined;
+          user.ConfirmPassword = undefined;
 
           res.status(200).json({ login: true, token: token, user: user });
         } else {
