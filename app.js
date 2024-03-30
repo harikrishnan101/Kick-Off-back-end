@@ -21,18 +21,16 @@ connectDB()
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// const corsOptions ={
-//   origin:['https://kick-off.onrender.com','http://localhost:3000'], 
-//   credentials:true,            //access-control-allow-credentials:true
-//   optionSuccessStatus:200
-// }
-// app.use(cors(corsOptions));
-
-app.use(cors({
-  origin:['*'],
+const corsOptions ={
+  origin:['https://kick-off.onrender.com','http://localhost:3000'], 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
-}))
+}
+app.use(cors(corsOptions));
+
+// app.use(cors({
+//   origin:['https://kick-off.onrender.com','http://localhost:3000']
+// }))
 
 app.use(logger('dev'));
 app.use(express.json());
