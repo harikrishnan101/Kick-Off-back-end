@@ -29,7 +29,7 @@ app.set('view engine', 'jade');
 // app.use(cors(corsOptions));
 
 app.use(cors({
-  origin:['https://kick-off.onrender.com','http://localhost:3000'],
+  origin:['*'],
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }))
