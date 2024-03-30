@@ -28,9 +28,9 @@ app.set('view engine', 'jade');
 // }
 // app.use(cors(corsOptions));
 
-app.use(cors({
-  origin:['https://kick-off.onrender.com','http://localhost:3000']
-}))
+// app.use(cors({
+//   origin:['https://kick-off.onrender.com','http://localhost:3000']
+// }))
 
 app.use(logger('dev'));
 app.use(express.json());
