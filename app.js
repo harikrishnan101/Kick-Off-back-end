@@ -1,59 +1,66 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-// Database
-const connectDB=require('./config/dbconfig')
+const express = require('express');
+const path = require('path');
+const createError = require('http-errors');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const  connectDB  = require('./config/dbconfig');
 
-var jwt = require('jsonwebtoken');
+// Load environment variables
+require('dotenv').config();
 
-var authRouter = require('./routes/authRouter');
-var usersRouter = require('./routes/admin');
-var adminRouter = require('./routes/admin');
+// Routes
+const authRouter = require('./routes/authRouter');
+const usersRouter = require('./routes/users');
+const adminRouter = require('./routes/admin');
 
-require('dotenv').config()
+// Initialize Express app
+const app = express();
 
-var cors = require('cors')
-var app = express();
-connectDB()
-// view engine setup
+// Connect to database
+connectDB();
+
+// Set up view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// const corsOptions ={
-//   origin:['https://kick-off.onrender.com','http://localhost:3000'], 
-//   credentials:true,            //access-control-allow-credentials:true
-//   optionSuccessStatus:200
-// }
-// app.use(cors(corsOptions));
-
+// Set up CORS
 app.use(cors({
-  origin:['https://kick-off.onrender.com','http://localhost:3000']
-}))
+  origin: ['https://kick-off.onrender.com', 'http://localhost:3000']
+}));
 
+// Set up logging
 app.use(logger('dev'));
+
+// Parse incoming requests with JSON payloads
 app.use(express.json());
+
+// Parse incoming requests with URL-encoded payloads
 app.use(express.urlencoded({ extended: false }));
+
+// Parse cookies
 app.use(cookieParser());
+
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Define routes
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+  // Set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // Render the error page
   res.status(err.status || 500);
   res.render('error');
 });
