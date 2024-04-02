@@ -4,7 +4,7 @@ const multer = require('multer');
 const mongoose = require('mongoose')
 // const { response } = require('../app');
 const courtSchedules = require('../Models/courtTimingSchema');
-const { response } = require('../app');
+// const { response } = require('../app');
 const ObjectId = require('mongoose').Types.ObjectId
 const RegisterNewCourt = (req, res) => {
 
