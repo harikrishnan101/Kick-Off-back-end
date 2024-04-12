@@ -7,43 +7,38 @@ const courtSchedules = require('../Models/courtTimingSchema');
 // const { response } = require('../app');
 const ObjectId = require('mongoose').Types.ObjectId
 const RegisterNewCourt = (req, res) => {
+    const fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, "public/CourtsImg");
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + "-" + file.originalname);
+        }
+    });
 
+    const upload = multer({ storage: fileStorage }).single("image");
 
-    try {
-        const fileStorage = multer.diskStorage({
-            destination: (req, file, cb) => {
-                cb(null, "public/CourtsImg");
-            },
-            filename: (req, file, cb) => {
-                cb(null, Date.now() + "-" + file.originalname);
-            }
-        });
+    upload(req, res, (err) => {
+        if (err) {
+            // Handle multer upload error
+            return res.status(500).json({ message: "File upload failed", error: err });
+        }
 
-        const upload = multer({ storage: fileStorage }).single("image");
+        COURT({
+            name: req.query.name,
+            location: req.query.location,
+            userId: req.userId,
+            image: req.file ? req.file.filename : 'defaultimage.jpg'
+        }).save()
+            .then(response => {
+                res.status(200).json({ message: "Court registration successful" });
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Court registration failed", error });
+            });
+    });
+};
 
-        upload(req, res, (err) => {
-
-
-            COURT({
-                name: req.query.name,
-                location: req.query.location,
-                userId: req.userId,
-               
-                image: req?.file?.filename || 'defaultimage.jpg'
-            }).save()
-                .then(response => {
-
-                    res.status(200).json({ message: "court registration successfull" })
-                })
-                .catch(res => {
-
-                    res.status(403).json({ message: "court registration failed" })
-                })
-        })
-    } catch (error) {
-
-    }
-}
 
 const getMyCourtData = (req, res) => {
 
