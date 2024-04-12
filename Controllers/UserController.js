@@ -12,7 +12,7 @@ const RegisterNewCourt = (req, res) => {
     try {
         const fileStorage = multer.diskStorage({
             destination: (req, file, cb) => {
-                cb(null, "public/venderCourts");
+                cb(null, "public/CourtsImg");
             },
             filename: (req, file, cb) => {
                 cb(null, Date.now() + "-" + file.originalname);
